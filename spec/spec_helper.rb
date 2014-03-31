@@ -9,8 +9,6 @@ end
 # source
 require_relative '../lib/roman_numbers'
 
-# input resources
-
 # gems used
 require 'rspec'
 require 'awesome_print'

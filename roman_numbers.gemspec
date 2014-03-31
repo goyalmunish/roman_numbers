@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = RomanNumbers::VERSION
   spec.authors       = ["Munish Goyal"]
   spec.email         = ["munishapc@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
+  spec.description   = %q{Conversion between Integers and Roman Numbers}
   spec.summary       = %q{Conversion between Integers and Roman Numbers}
   spec.homepage      = "https://github.com/goyalmunish/roman_numbers"
   spec.license       = "MIT"
