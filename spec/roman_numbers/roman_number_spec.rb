@@ -126,7 +126,7 @@ module RomanNumbers
           RomanNumber.new(1944).convert_decimal_to_roman.should == 'MCMXLIV'
         end
       end
-      context 'For Very Simple Integers' do
+      context 'For Very Complex Integers' do
         it 'returns MMMCMXCIX for 3999' do
           RomanNumber.new(3999).convert_decimal_to_roman.should == 'MMMCMXCIX'
         end
