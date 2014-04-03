@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 2.14"
   spec.add_development_dependency "autotest"
   spec.add_development_dependency "simplecov"
+  spec.required_ruby_version = '>= 1.9'
 end

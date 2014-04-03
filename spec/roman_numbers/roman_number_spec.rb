@@ -2,9 +2,11 @@ require_relative '../spec_helper'
 
 module RomanNumbers
   describe RomanNumber do # EXAMPLE GROUP
+
     before(:each) do
       @roman_number = RomanNumber.new(1)
     end
+
     describe '#largest_repeatable_element' do
       # set 1
       [
