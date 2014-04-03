@@ -7,6 +7,7 @@ rescue LoadError
 end
 
 # source
+require_relative 'helpers'
 require_relative '../lib/roman_numbers'
 
 # gems used
