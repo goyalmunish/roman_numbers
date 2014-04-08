@@ -8,14 +8,14 @@ Gem::Specification.new do |spec|
   spec.version       = RomanNumbers::VERSION
   spec.authors       = ["Munish Goyal"]
   spec.email         = ["munishapc@gmail.com"]
-  spec.description   = %q{Conversion between Integers and Roman Numbers}
   spec.summary       = %q{Conversion between Integers and Roman Numbers}
+  spec.description   = %q{Conversion between Integers and Roman Numbers}
   spec.homepage      = "https://github.com/goyalmunish/roman_numbers"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features|autotest)/})
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", ">= 1.3"
@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 2.14"
   spec.add_development_dependency "autotest"
   spec.add_development_dependency "simplecov"
-  spec.required_ruby_version = '>= 1.9'
+  spec.required_ruby_version = '>=1.9'
 end
