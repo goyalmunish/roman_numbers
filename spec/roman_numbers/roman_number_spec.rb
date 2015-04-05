@@ -6,50 +6,7 @@ module RomanNumbers
     before(:each) do
       @roman_number = RomanNumber.new(1)
     end
-
-    describe '#largest_repeatable_element' do
-      # set 1
-      [
-          [3999, {:reduced_integer => 999, :largest_element => {:unit => :M, :value => 1000}, :times => 3}],
-          [1066, {:reduced_integer => 66, :largest_element => {:unit => :M, :value => 1000}, :times => 1}],
-          [207, {:reduced_integer => 7, :largest_element => {:unit => :C, :value => 100}, :times => 2}],
-          [10, {:reduced_integer => 0, :largest_element => {:unit => :X, :value => 10}, :times => 1}],
-      ].each do |exp_input, exp_output|
-        it %Q{works for #{exp_input} as input} do
-          output = @roman_number.largest_repeatable_element(exp_input)
-          output.should == exp_output
-        end
-      end
-      # set 2
-      [
-          [999, StartsWithNonRepeatableRomanUnitError],
-          [44, StartsWithNonRepeatableRomanUnitError],
-      ].each do |exp_input, exp_output|
-        it %Q{raises #{exp_output} for #{exp_input} as input} do
-          expect {
-            @roman_number.largest_repeatable_element(exp_input)
-          }.to raise_error(exp_output)
-        end
-      end
-    end
-
-    describe '#largest_non_repeatable_element' do
-      before(:each) do
-        @roman_number = RomanNumber.new(1)
-      end
-      [
-          [999, {:reduced_integer => 99, :largest_element => {:unit => :CM, :value => 900}, :times => 1}],
-          [900, {:reduced_integer => 0, :largest_element => {:unit => :CM, :value => 900}, :times => 1}],
-          [44, {:reduced_integer => 4, :largest_element => {:unit => :XL, :value => 40}, :times => 1}],
-          [49, {:reduced_integer => 9, :largest_element => {:unit => :XL, :value => 40}, :times => 1}],
-      ].each do |exp_input, exp_output|
-        it %Q{works for #{exp_input} as input} do
-          output = @roman_number.largest_non_repeatable_element(exp_input)
-          output.should == exp_output
-        end
-      end
-    end
-
+    
     describe '#convert_arabic_to_roman' do
       context 'For Valid Input' do
         Helpers.valid_inputs.each do |exp_input, exp_output|
@@ -91,6 +48,52 @@ module RomanNumbers
         end
       end
     end
+
+    describe 'PRIVATE_INTERFACE' do 
+      describe '#largest_repeatable_element' do
+        # set 1
+        [
+            [3999, {:reduced_integer => 999, :largest_element => {:unit => :M, :value => 1000}, :times => 3}],
+            [1066, {:reduced_integer => 66, :largest_element => {:unit => :M, :value => 1000}, :times => 1}],
+            [207, {:reduced_integer => 7, :largest_element => {:unit => :C, :value => 100}, :times => 2}],
+            [10, {:reduced_integer => 0, :largest_element => {:unit => :X, :value => 10}, :times => 1}],
+        ].each do |exp_input, exp_output|
+          it %Q{works for #{exp_input} as input} do
+            output = @roman_number.send(:largest_repeatable_element, exp_input)
+            output.should == exp_output
+          end
+        end
+        # set 2
+        [
+            [999, StartsWithNonRepeatableRomanUnitError],
+            [44, StartsWithNonRepeatableRomanUnitError],
+        ].each do |exp_input, exp_output|
+          it %Q{raises #{exp_output} for #{exp_input} as input} do
+            expect {
+              @roman_number.send(:largest_repeatable_element, exp_input)
+            }.to raise_error(exp_output)
+          end
+        end
+      end
+
+      describe '#largest_non_repeatable_element' do
+        before(:each) do
+          @roman_number = RomanNumber.new(1)
+        end
+        [
+            [999, {:reduced_integer => 99, :largest_element => {:unit => :CM, :value => 900}, :times => 1}],
+            [900, {:reduced_integer => 0, :largest_element => {:unit => :CM, :value => 900}, :times => 1}],
+            [44, {:reduced_integer => 4, :largest_element => {:unit => :XL, :value => 40}, :times => 1}],
+            [49, {:reduced_integer => 9, :largest_element => {:unit => :XL, :value => 40}, :times => 1}],
+        ].each do |exp_input, exp_output|
+          it %Q{works for #{exp_input} as input} do
+            output = @roman_number.send(:largest_non_repeatable_element, exp_input)
+            output.should == exp_output
+          end
+        end
+      end
+    end
+
   end
 end
 
