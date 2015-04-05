@@ -1,5 +1,5 @@
-require 'roman_numbers/version'
-require 'roman_numbers/roman_number'
+require_relative 'roman_numbers/version'
+require_relative 'roman_numbers/roman_number'
 
 module RomanNumbers
   # custom Exceptions
