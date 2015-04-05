@@ -94,6 +94,8 @@ module RomanNumbers
 
     end
 
+    private
+
     # returns an array of hashed containing info on desired output roman
     def calculate_staged_roman_hash(input_integer)
       begin
