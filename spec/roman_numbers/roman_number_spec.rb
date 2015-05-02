@@ -1,55 +1,95 @@
 require_relative '../spec_helper'
 
 module RomanNumbers
-  describe RomanNumber do # EXAMPLE GROUP
+  describe RomanNumber do
+
+    $invalid_input_error = InvalidInputError
 
     before(:each) do
       @roman_number = RomanNumber.new(1)
     end
     
-    describe '#convert_arabic_to_roman' do
-      context 'For Valid Input' do
-        Helpers.valid_inputs.each do |exp_input, exp_output|
-          it %Q{returns #{exp_output} for #{exp_input} as input} do
-            RomanNumber.new(exp_input).convert_decimal_to_roman.should == exp_output
+    describe '#convert_decimal_to_roman' do
+      shared_examples_for "works_with_valid_integral_roman_input_collection" do |array|
+        # Note: here array is array of hashes
+        array.each do |hsh|
+          it %Q{returns #{hsh[:integer]} for #{hsh[:roman]} as input} do
+            RomanNumber.new(hsh[:integer]).convert_decimal_to_roman.should == hsh[:roman]
           end
         end
       end
-      context 'For Invalid Input' do
-        exp_output = InvalidInputError
-        [
-            4000, 0, -10, '10'
-        ].each do |exp_input|
-          it %Q{raises #{exp_output} for #{exp_input} as input} do
+      
+      shared_examples_for "raises_error_on_invalid_roman_input_collection" do |array|
+        # Note: here array is array of integers
+        array.each do |integral_elem|
+          it %Q{raises #{$invalid_input_error} for #{integral_elem} as input} do
+            expect {
+              RomanNumber.new(integral_elem).convert_decimal_to_roman
+            }.to raise_error($invalid_input_error)
+        end
+        end
+      end
+
+      context %q(Symbols 'I', 'X', 'C', and 'M' cannot be repeated more than three times in succession) do 
+        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(VIIII IIIIV XXXXI XXXXC CCCCX XCCCC MMMMC)
+      end
+    
+      context %q(Symbols 'I', 'X', 'C', and 'M' can be repeated 4 times if 3rd and 4th are separated by smaller value) do 
+        it_behaves_like "works_with_valid_integral_roman_input_collection", Helpers.input_set_1
+      end
+
+      context %q(Symbols 'D', 'L', 'V' can never be repeated in succession) do 
+        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(DD DDC LL LLX VV VVI)
+      end
+
+      context %Q(Symbol 'I' can be subtrated from 'V' and 'X', and
+        Symbol 'L' can be subtracted from 'L' and 'C', and
+        Symbol 'C' can be subtracted from 'D' and 'M') do 
+        it_behaves_like "works_with_valid_integral_roman_input_collection", Helpers.input_set_2
+      end
+
+      context %Q(Symbol 'I' can be subtrated from 'V' and 'X' only, and
+        Symbol 'X' can be subtracted from 'L' and 'C' only, and
+        Symbol 'C' can be subtracted from 'D' and 'M' only) do
+        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(IL IC ID IM XD XM)
+      end
+    
+      context 'For Following Valid Inputs' do
+        it_behaves_like "works_with_valid_integral_roman_input_collection", Helpers.valid_inputs
+      end
+    
+      context 'For Following Invalid Input' do
+        [4000, 0, -10, '10'].each do |exp_input|
+          it %Q{raises #{$invalid_input_error} for #{exp_input} as input} do
             expect {
               RomanNumber.new(exp_input).convert_decimal_to_roman
-            }.to raise_error(exp_output)
+            }.to raise_error($invalid_input_error)
           end
         end
       end
     end
 
-    describe '#convert_roman_to_arabic' do
+    describe '#convert_roman_to_decimal' do
       context 'For Valid Input' do
-        Helpers.valid_inputs.each do |exp_output, exp_input|
-          it %Q{returns #{exp_output} for #{exp_input} as input} do
-            RomanNumber.new(exp_input).convert_roman_to_decimal.should == exp_output
+        Helpers.valid_inputs.each do |hsh|
+          it %Q{returns #{hsh[:roman]} for #{hsh[:integer]} as input} do
+            RomanNumber.new(hsh[:roman]).convert_roman_to_decimal.should == hsh[:integer]
           end
         end
       end
+
       context 'For Invalid Input' do
-        exp_output = InvalidInputError
-        %w(ABCDE CCCCVII CCVVVVI XXM).each do |exp_input|
-          it %Q{raises #{exp_output} for #{exp_input} as input} do
+        %w(ABCDE CCCCVII CCVVVVI).each do |exp_input|
+          it %Q{raises #{$invalid_input_error} for #{exp_input} as input} do
             expect {
               RomanNumber.new(exp_input).convert_roman_to_decimal
-            }.to raise_error(exp_output)
+            }.to raise_error($invalid_input_error)
           end
         end
       end
     end
 
-    describe 'PRIVATE_INTERFACE' do 
+    describe 'PRIVATE_INTERFACE (for developer)' do 
       describe '#largest_repeatable_element' do
         # set 1
         [
@@ -93,7 +133,6 @@ module RomanNumbers
         end
       end
     end
-
   end
 end
 
