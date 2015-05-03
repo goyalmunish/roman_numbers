@@ -43,28 +43,30 @@ module RomanNumbers
           @output_roman = String.new
         when String
           @input_string = input.upcase
-          @output_arabic = 0
+          @output_integer = 0
       end
     end
 
+    attr_accessor :input_integer, :input_string, :output_roman, :staged_roman_hash
+    attr_accessor :output_integer
+
     # converts arabic to roman
-    def convert_decimal_to_roman(input_integer=@input_integer)
+    def convert_decimal_to_roman(passed_integer=input_integer)
       # validating input
-      unless (1..3999).include? input_integer
-        raise InvalidInputError, "Invalid Input: #{input_integer}"
+      unless (1..3999).include? passed_integer
+        raise InvalidInputError, "Invalid Input: #{passed_integer}"
       end
       # getting staged roman hash
-      calculate_staged_roman_hash(input_integer)
+      calculate_staged_roman_hash(passed_integer)
       # extracting hash from staged roman hash
-      @staged_roman_hash.each do |element|
-        @output_roman << (element[:largest_element][:unit].to_s)*(element[:times])
+      staged_roman_hash.each do |element|
+        output_roman << (element[:largest_element][:unit].to_s)*(element[:times])
       end
-      return @output_roman
+      output_roman
     end
 
     # converts given arabic number (in string form) to corresponding integer
-    def convert_roman_to_decimal(input_roman=@input_string.clone)
-      input_roman
+    def convert_roman_to_decimal(passed_roman=input_string.clone)
       # generating regex expressions
       double_units_array = ROMAN_NON_REPEATABLE_UNITS_2.map { |element| ('^' + element[:unit].to_s) }
       single_units_array = (ROMAN_REPEATABLE_UNITS + ROMAN_NON_REPEATABLE_UNITS_1).map { |element| ('^' + element[:unit].to_s) }
@@ -72,94 +74,93 @@ module RomanNumbers
       single_units_regex = Regexp.new(single_units_array.join('|'))
       # validation
       # TODO: to add more validations
-      if input_roman =~ /(.)\1{#{MAX_ALLOWED_REPETITION},}/
-        raise InvalidInputError, "Invalid Input: #{input_roman}"
+      if passed_roman =~ /(.)\1{#{MAX_ALLOWED_REPETITION},}/
+        raise InvalidInputError, "Invalid Input: #{passed_roman}"
       end
       # processing
-      if input_roman.length > 0
-        if unit = input_roman.slice!(double_units_regex)
-          @output_arabic += ROMAN_DOUBLE_UNITS.find { |element| element[:unit] == unit.to_sym }[:value]
-          convert_roman_to_decimal(input_roman)
-        elsif unit = input_roman.slice!(single_units_regex)
-          @output_arabic += ROMAN_SINGLE_UNITS.find { |element| element[:unit] == unit.to_sym }[:value]
-          convert_roman_to_decimal(input_roman)
+      if passed_roman.length > 0
+        if unit = passed_roman.slice!(double_units_regex)
+          @output_integer += ROMAN_DOUBLE_UNITS.find { |element| element[:unit] == unit.to_sym }[:value]
+          convert_roman_to_decimal(passed_roman)
+        elsif unit = passed_roman.slice!(single_units_regex)
+          @output_integer += ROMAN_SINGLE_UNITS.find { |element| element[:unit] == unit.to_sym }[:value]
+          convert_roman_to_decimal(passed_roman)
         else
-          # invalud input
-          raise InvalidInputError, "Invalid Input: #{input_roman}"
+          # invalid input
+          raise InvalidInputError, "Invalid Input: #{passed_roman}"
         end
       else
         # process is complete
-        return @output_arabic
+        @output_integer
       end
-
     end
 
     private
 
     # returns an array of hashed containing info on desired output roman
-    def calculate_staged_roman_hash(input_integer)
+    def calculate_staged_roman_hash(passed_input_integer)
       begin
-        temp_hash = largest_repeatable_element(input_integer)
+        temp_hash = largest_repeatable_element(passed_input_integer)
       rescue StartsWithNonRepeatableRomanUnitError => ex
-        temp_hash = largest_non_repeatable_element(input_integer)
+        temp_hash = largest_non_repeatable_element(passed_input_integer)
       end
       if temp_hash
-        @staged_roman_hash << temp_hash
-        input_integer = temp_hash[:reduced_integer]
-        calculate_staged_roman_hash(input_integer)
+        staged_roman_hash << temp_hash
+        passed_input_integer = temp_hash[:reduced_integer]
+        calculate_staged_roman_hash(passed_input_integer)
       else
         # processing done
-        return @staged_roman_hash
+        staged_roman_hash
       end
     end
 
     # returns reduced_integer, largest repeatable element, and number of times it can be repeated
-    def largest_repeatable_element(input_integer)
-      if input_integer > 0
-        largest_element = ROMAN_REPEATABLE_UNITS.find { |element| input_integer >= element[:value] }
+    def largest_repeatable_element(passed_input_integer)
+      if passed_input_integer > 0
+        largest_element = ROMAN_REPEATABLE_UNITS.find { |element| passed_input_integer >= element[:value] }
         # TODO: make it efficient by removing elements before largest_element
         # TODO: to use binary search instead
         if largest_element
-          times = input_integer/largest_element[:value]
-          reduced_integer = input_integer%largest_element[:value]
+          times = passed_input_integer/largest_element[:value]
+          reduced_integer = passed_input_integer%largest_element[:value]
           if times > MAX_ALLOWED_REPETITION
             # given integer starts with non_repeatable roman unit
             raise StartsWithNonRepeatableRomanUnitError
           end
-          return {:reduced_integer => reduced_integer, :largest_element => largest_element, :times => times}
+          {:reduced_integer => reduced_integer, :largest_element => largest_element, :times => times}
         else
           # non-reachable code
           raise NonReachableCodeError, 'LargestElementIsNil'
         end
-      elsif input_integer == 0
+      elsif passed_input_integer == 0
         # process completed
-        return nil
+        nil
       else
         # non-reachable code
-        # input_integer has to be >=0
+        # passed_input_integer has to be >=0
         raise NonReachableCodeError, 'ReceivedNegativeInteger'
       end
     end
 
     # returns largest non-repeatable element
-    def largest_non_repeatable_element(input_integer)
-      if input_integer > 0
-        largest_element = ROMAN_NON_REPEATABLE_UNITS.find { |element| input_integer >= element[:value] }
+    def largest_non_repeatable_element(passed_input_integer)
+      if passed_input_integer > 0
+        largest_element = ROMAN_NON_REPEATABLE_UNITS.find { |element| passed_input_integer >= element[:value] }
         # TODO: make it efficient by removing elements before largest_element
         # TODO: to use binary search instead
         if largest_element
-          reduced_integer = input_integer%largest_element[:value]
-          return {:reduced_integer => reduced_integer, :largest_element => largest_element, :times => 1}
+          reduced_integer = passed_input_integer%largest_element[:value]
+          {:reduced_integer => reduced_integer, :largest_element => largest_element, :times => 1}
         else
           # no non_repeatable element preset, but process is not complete yet
-          return {:reduced_integer => input_integer, :largest_element => nil, :times => 0}
+          {:reduced_integer => passed_input_integer, :largest_element => nil, :times => 0}
         end
-      elsif input_integer == 0
+      elsif passed_input_integer == 0
         # process completed
-        return nil
+        nil
       else
         # non-reachable code
-        # input_integer has to be >=0
+        # passed_input_integer has to be >=0
         raise NonReachableCodeError, 'ReceivedNegativeInteger'
       end
     end
