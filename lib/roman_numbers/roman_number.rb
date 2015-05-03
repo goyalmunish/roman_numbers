@@ -47,8 +47,7 @@ module RomanNumbers
       end
     end
 
-    attr_accessor :input_integer, :input_string, :output_roman, :staged_roman_hash
-    attr_accessor :output_integer
+    attr_accessor :input_integer, :input_string, :output_roman, :staged_roman_hash, :output_integer
 
     # converts arabic to roman
     def convert_decimal_to_roman(passed_integer=input_integer)
@@ -80,10 +79,10 @@ module RomanNumbers
       # processing
       if passed_roman.length > 0
         if unit = passed_roman.slice!(double_units_regex)
-          @output_integer += ROMAN_DOUBLE_UNITS.find { |element| element[:unit] == unit.to_sym }[:value]
+          self.output_integer += ROMAN_DOUBLE_UNITS.find { |element| element[:unit] == unit.to_sym }[:value]
           convert_roman_to_decimal(passed_roman)
         elsif unit = passed_roman.slice!(single_units_regex)
-          @output_integer += ROMAN_SINGLE_UNITS.find { |element| element[:unit] == unit.to_sym }[:value]
+          self.output_integer += ROMAN_SINGLE_UNITS.find { |element| element[:unit] == unit.to_sym }[:value]
           convert_roman_to_decimal(passed_roman)
         else
           # invalid input
@@ -91,9 +90,11 @@ module RomanNumbers
         end
       else
         # process is complete
-        @output_integer
+        self.output_integer
       end
     end
+
+    protected :input_integer, :input_string, :output_roman, :staged_roman_hash, :output_integer
 
     private
 
