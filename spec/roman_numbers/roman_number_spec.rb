@@ -10,52 +10,17 @@ module RomanNumbers
     end
     
     describe '#convert_decimal_to_roman' do
-      shared_examples_for "works_with_valid_integral_roman_input_collection" do |array|
+      shared_examples_for "works_with_valid_integral_input_and_roman_output_collection" do |array|
         # Note: here array is array of hashes
         array.each do |hsh|
-          it %Q{returns #{hsh[:integer]} for #{hsh[:roman]} as input} do
+          it %Q{returns #{hsh[:roman]} for #{hsh[:integer]} as input} do
             RomanNumber.new(hsh[:integer]).convert_decimal_to_roman.should == hsh[:roman]
           end
         end
       end
-      
-      shared_examples_for "raises_error_on_invalid_roman_input_collection" do |array|
-        # Note: here array is array of integers
-        array.each do |integral_elem|
-          it %Q{raises #{$invalid_input_error} for #{integral_elem} as input} do
-            expect {
-              RomanNumber.new(integral_elem).convert_decimal_to_roman
-            }.to raise_error($invalid_input_error)
-        end
-        end
-      end
-
-      context %q(Symbols 'I', 'X', 'C', and 'M' cannot be repeated more than three times in succession) do 
-        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(VIIII IIIIV XXXXI XXXXC CCCCX XCCCC MMMMC)
-      end
-    
-      context %q(Symbols 'I', 'X', 'C', and 'M' can be repeated 4 times if 3rd and 4th are separated by smaller value) do 
-        it_behaves_like "works_with_valid_integral_roman_input_collection", Helpers.input_set_1
-      end
-
-      context %q(Symbols 'D', 'L', 'V' can never be repeated in succession) do 
-        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(DD DDC LL LLX VV VVI)
-      end
-
-      context %Q(Symbol 'I' can be subtrated from 'V' and 'X', and
-        Symbol 'L' can be subtracted from 'L' and 'C', and
-        Symbol 'C' can be subtracted from 'D' and 'M') do 
-        it_behaves_like "works_with_valid_integral_roman_input_collection", Helpers.input_set_2
-      end
-
-      context %Q(Symbol 'I' can be subtrated from 'V' and 'X' only, and
-        Symbol 'X' can be subtracted from 'L' and 'C' only, and
-        Symbol 'C' can be subtracted from 'D' and 'M' only) do
-        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(IL IC ID IM XD XM)
-      end
     
       context 'For Following Valid Inputs' do
-        it_behaves_like "works_with_valid_integral_roman_input_collection", Helpers.valid_inputs
+        it_behaves_like "works_with_valid_integral_input_and_roman_output_collection", Helpers.valid_inputs
       end
     
       context 'For Following Invalid Input' do
@@ -70,6 +35,50 @@ module RomanNumbers
     end
 
     describe '#convert_roman_to_decimal' do
+      shared_examples_for "works_with_valid_roman_input_and_integral_output_collection" do |array|
+        # Note: here array is array of hashes
+        array.each do |hsh|
+          it %Q{returns #{hsh[:integer]} for #{hsh[:roman]} as input} do
+            RomanNumber.new(hsh[:roman]).convert_roman_to_decimal.should == hsh[:integer]
+          end
+        end
+      end
+
+      shared_examples_for "raises_error_on_invalid_roman_input_collection" do |array|
+        # Note: here array is array of integers
+        array.each do |integral_elem|
+          it %Q{raises #{$invalid_input_error} for #{integral_elem} as input} do
+            expect {
+              RomanNumber.new(integral_elem).convert_decimal_to_roman
+            }.to raise_error($invalid_input_error)
+          end
+        end
+      end
+
+      context %q(Symbols 'I', 'X', 'C', and 'M' cannot be repeated more than three times in succession) do 
+        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(VIIII IIIIV XXXXI XXXXC CCCCX XCCCC MMMMC)
+      end
+    
+      context %q(Symbols 'I', 'X', 'C', and 'M' can be repeated 4 times if 3rd and 4th are separated by smaller value) do 
+        it_behaves_like "works_with_valid_roman_input_and_integral_output_collection", Helpers.input_set_1
+      end
+
+      context %q(Symbols 'D', 'L', 'V' can never be repeated in succession) do 
+        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(DD DDC LL LLX VV VVI)
+      end
+
+      context %Q(Symbol 'I' can be subtracted from 'V' and 'X', and
+        Symbol 'L' can be subtracted from 'L' and 'C', and
+        Symbol 'C' can be subtracted from 'D' and 'M') do 
+        it_behaves_like "works_with_valid_roman_input_and_integral_output_collection", Helpers.input_set_2
+      end
+
+      context %Q(Symbol 'I' can be subtrated from 'V' and 'X' only, and
+        Symbol 'X' can be subtracted from 'L' and 'C' only, and
+        Symbol 'C' can be subtracted from 'D' and 'M' only) do
+        it_behaves_like "raises_error_on_invalid_roman_input_collection", %w(IL IC ID IM XD XM)
+      end
+
       context 'For Valid Input' do
         Helpers.valid_inputs.each do |hsh|
           it %Q{returns #{hsh[:roman]} for #{hsh[:integer]} as input} do
