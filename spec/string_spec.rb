@@ -3,11 +3,11 @@ include RomanNumbers
 
 describe String do
 
-  context "#from_roman_to_integer" do
+  context "#from_roman_to_decimal" do
 
     it "is added and internally calls 'convert_roman_to_decimal'" do
       expect_any_instance_of(RomanNumbers::RomanNumber).to receive(:convert_roman_to_decimal)
-      "some_string".from_roman_to_integer
+      "some_string".from_roman_to_decimal
     end
   end
 end

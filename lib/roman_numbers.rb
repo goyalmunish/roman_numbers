@@ -15,7 +15,7 @@ end
 
 # opening String class to add from_roman_to_integer method
 class String
-  def from_roman_to_integer
+  def from_roman_to_decimal
     RomanNumbers::RomanNumber.new(self).convert_roman_to_decimal
   end
 end
