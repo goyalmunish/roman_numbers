@@ -13,8 +13,8 @@ module RomanNumbers
       shared_examples_for "works_with_valid_integral_input_and_roman_output_collection" do |array|
         # Note: here array is array of hashes
         array.each do |hsh|
-          it %Q{returns #{hsh[:roman]} for #{hsh[:integer]} as input} do
-            RomanNumber.new(hsh[:integer]).convert_decimal_to_roman.should == hsh[:roman]
+          it %Q{returns #{hsh[:roman]} for #{hsh[:decimal]} as input} do
+            RomanNumber.new(hsh[:decimal]).convert_decimal_to_roman.should == hsh[:roman]
           end
         end
       end
@@ -38,8 +38,8 @@ module RomanNumbers
       shared_examples_for "works_with_valid_roman_input_and_integral_output_collection" do |array|
         # Note: here array is array of hashes
         array.each do |hsh|
-          it %Q{returns #{hsh[:integer]} for #{hsh[:roman]} as input} do
-            RomanNumber.new(hsh[:roman]).convert_roman_to_decimal.should == hsh[:integer]
+          it %Q{returns #{hsh[:decimal]} for #{hsh[:roman]} as input} do
+            RomanNumber.new(hsh[:roman]).convert_roman_to_decimal.should == hsh[:decimal]
           end
         end
       end
@@ -81,8 +81,8 @@ module RomanNumbers
 
       context 'For Valid Input' do
         Helpers.valid_inputs.each do |hsh|
-          it %Q{returns #{hsh[:roman]} for #{hsh[:integer]} as input} do
-            RomanNumber.new(hsh[:roman]).convert_roman_to_decimal.should == hsh[:integer]
+          it %Q{returns #{hsh[:roman]} for #{hsh[:decimal]} as input} do
+            RomanNumber.new(hsh[:roman]).convert_roman_to_decimal.should == hsh[:decimal]
           end
         end
       end

@@ -1,6 +1,6 @@
 # RomanNumbers
 
-Conversion between Integers and Roman Numbers
+Conversion between Decimals and Roman Numbers
 
 Roman numerals are based on seven symbols:
 
@@ -64,7 +64,7 @@ By explicitly using RomanNumber class:
 By directly on String and Integer objects:
 
 
-    > 'MCMXLIV'.from_roman_to_integer
+    > 'MCMXLIV'.from_roman_to_decimal
 
     1944
 
@@ -74,7 +74,7 @@ By directly on String and Integer objects:
     "MCMXLIV"
 
 
-    > 'MMMMMX'.from_roman_to_integer
+    > 'MMMMMX'.from_roman_to_decimal
 
     RomanNumbers::InvalidInputError
 
